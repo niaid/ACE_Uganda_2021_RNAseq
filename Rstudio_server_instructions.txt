@@ -2,7 +2,7 @@ RNA-seq workshop R and Rstudio installation and DESeq2 script execution instruct
 
 We will use Rstudio on the biocompace (IDIS) server
 
-1. Log in to biocompace (IDIS), Mac and linux – Terminal, Windows - Putty
+1. Log in to biocompace (IDIS) server, for Mac and linux – Terminal, for Windows - Putty
 
 ssh -v -L 8787:localhost:8787 bjeffrey@137.63.194.9
 
@@ -30,3 +30,4 @@ setwd("ACE_Uganda_2021_RNAseq/")
 
 Rstudio shortcuts:
 execute line by line by pressing command-enter. (key to left of spacebar on Mac)
+
