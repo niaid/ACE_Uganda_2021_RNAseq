@@ -1,0 +1,27 @@
+RNA-seq workshop R and Rstudio installation and DESeq2 script execution instructions
+
+We will use Rstudio on the biocompace (IDIS) server
+
+1. Log in to biocompace (IDIS), Mac and linux – Terminal, Windows - Putty
+
+ssh -v -L 8787:localhost:8787 bjeffrey@137.63.194.9
+
+Use your username!
+
+
+2.  Pull code from GitHub
+
+git clone https://github.com/niaid/ACE_Uganda_2021_RNAseq
+
+
+3.  Navigate to ACE_Uganda_2021_RNAseq directory
+
+cd ACE_Uganda_2021_RNAseq
+
+
+4.  Paste localhost:8787 in your web browser
+
+
+
+Rstudio shortcuts:
+execute line by line by pressing command-enter
