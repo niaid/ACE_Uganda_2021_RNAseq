@@ -51,9 +51,9 @@ sampleTable <- read.csv(csvfile, row.names = 1)
 # print out contents
 sampleTable
 
+# generate a list of bam filenames, we will 
 filenames <- file.path(indir, paste0(sampleTable$Run, "_subset.bam"))
 filenames
-sampleTable$Run
 
 file.exists(filenames)
 
@@ -72,7 +72,8 @@ seqinfo(bamfiles[1])
 # Define gene models - read from GTF file http://www.ensembl.org/info/website/upload/gff.html
 library("GenomicFeatures")
 
-# genomic coord and gene file for airway study (GTF)
+# genomic coord and gene file for airway study (GTF), check airway directory from above
+list.files(indir)
 gtffile <- file.path(indir,"Homo_sapiens.GRCh37.75_subset.gtf")
 
 # load from this gtf file and indicate none of our sequences are circular
@@ -80,16 +81,23 @@ txdb <- makeTxDbFromGFF(gtffile, format = "gtf", circ_seqs = character())
 ?makeTxDbFromGFF
 
 # make a GRangesList of all exons grouped by gene
+# This will 
 # get more information on a function
 ?exonsBy
 ebg <- exonsBy(txdb, by="gene")
 ebg
 
 
+## We now have a data objects that define our gene models (ebg), we want to now process our BAM files
+# to generate a counts matrix with number of reads mapped to each gene
+
 # Read counting step using summarizeOverlaps function from GenomicAlignments package
 # NOTE: can use multiple cores to speed up if desired using BiocParallel package https://bioconductor.org/packages/3.8/BiocParallel
 # load GenomicAlignments package
 library("GenomicAlignments")
+
+# explore options of summarizeOverlaps
+?summarizeOverlaps
 
 # create the SummarizedExperiment object 
 se <- summarizeOverlaps(features=ebg, reads=bamfiles,
@@ -98,8 +106,6 @@ se <- summarizeOverlaps(features=ebg, reads=bamfiles,
                         ignore.strand=TRUE,
                         fragments=TRUE )
 
-# explore options of summarizeOverlaps
-?summarizeOverlaps
 
 # other tools that could be used:
 # summarizeOverlaps, GenomicAlignments package, 'DESeqDataSet' function
@@ -175,8 +181,6 @@ colData(se)
 
 #### starting from a prepared SummarizedExperiment ####
 # similar to SummarizedExperiment above, except using all genes
-# Will use tools in DESeq2 for exploratory and differential analysis
-library("DESeq2")
 
 # load airway summarized experiment data
 data("airway")
@@ -195,7 +199,10 @@ se$dex <- relevel(se$dex, "untrt")
 se$dex
 
 # construct the DESeqDataSet object from the SummarizedExperiment object
+# Will use tools in DESeq2 for exploratory and differential analysis
 # DESeqDataSet is a custom class within DESeq2, built on top of the generalized summarizedExperiment object
+
+library("DESeq2")
 dds <- DESeqDataSet(se, design = ~ cell + dex)
 
 # The simplest design formula for differential expression would be ~ condition, 
@@ -226,13 +233,15 @@ nrow(dds)
 # VST (variance stabilizing transformation) faster, for medium to large datasets
 # RLD (Regularized-logarithm transformation), better for small datasets, n < 30
 
-# plot mean counts vs standard deviation of raw counts
-meanSdPlot(assay(dds), ranks = FALSE)
 
 # VST - transform our data
 vsd <- vst(dds, blind = FALSE)
 head(assay(vsd), 3)
-meanSdPlot(assay(vsd), ranks = FALSE)
+
+# plotting package meanSD from vsn not caught up with new bioconductor yet
+# library("vsn")
+# meanSdPlot(assay(dds), ranks = FALSE)
+# meanSdPlot(assay(vsd), ranks = FALSE)
 
 
 #### Sample distances ####
@@ -294,7 +303,7 @@ gplt <- ggplot(pcaData, aes(x = PC1, y = PC2, color = dex, shape = cell)) +
   ylab(paste0("PC2: ", percentVar[2], "% variance")) +
   coord_fixed()
 gplt
-ggsave("../results/ggplot_PCA.pdf", height=4, width=6.5)
+ggsave("./ggplot_PCA.pdf", height=4, width=6.5)
 
 # ggplot cheat cheet - https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
 
@@ -404,6 +413,9 @@ anno
 
 # generate heatmap
 pheatmap(matSig, annotation_col = anno)
+
+
+#### ADDITIONAL CODE FOR REFERENCE ####
 
 #### Annotating and exporting results ####
 library("AnnotationDbi")
