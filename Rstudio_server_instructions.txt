@@ -22,6 +22,11 @@ cd ACE_Uganda_2021_RNAseq
 4.  Paste localhost:8787 in your web browser
 
 
+5.  In Rstudio console paste in:
+
+setwd("ACE_Uganda_2021_RNAseq/")
+
+
 
 Rstudio shortcuts:
-execute line by line by pressing command-enter
+execute line by line by pressing command-enter. (key to left of spacebar on Mac)
