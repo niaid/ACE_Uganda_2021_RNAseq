@@ -35,7 +35,7 @@
 # "airway" manuscript - https://www.ncbi.nlm.nih.gov/pubmed/24926665
 library("airway")
 
-# get information about a package
+# get information about a package - browseVignette does not work using Rstudio server
 browseVignettes("airway")
 
 # where is this data located, and list the files in that directory
@@ -113,7 +113,7 @@ se <- summarizeOverlaps(features=ebg, reads=bamfiles,
 # tximport, tximport package, 'DESeqDataSetFromTximport' function
 # htseq-count, HTSeq Python package (not part of R), 'DESeqDataSetFromHTSeq' function
 
-# explore the SummarizedExperiment object
+# explore the SummarizedExperiment object - caution can't use with Rstudio server
 browseVignettes("SummarizedExperiment")
 se
 
